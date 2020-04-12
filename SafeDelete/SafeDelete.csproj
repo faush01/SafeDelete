@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<TargetFrameworks>netstandard2.0;</TargetFrameworks>
+    <AssemblyVersion>1.0.0.3</AssemblyVersion>
+    <FileVersion>1.0.0.3</FileVersion>
+    <Version>1.0.0.3</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Pages\ItemListPage.html" />
+    <None Remove="Pages\ItemListPage.js" />
+    <None Remove="Pages\SettingsPage.html" />
+    <None Remove="Pages\SettingsPage.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\ItemListPage.html" />
+    <EmbeddedResource Include="Pages\ItemListPage.js" />
+    <EmbeddedResource Include="Pages\SettingsPage.html" />
+    <EmbeddedResource Include="Pages\SettingsPage.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediaBrowser.Server.Core" Version="4.4.0.27-beta" />
+	<PackageReference Include="System.Memory" Version="4.5.3" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(TargetPath)&quot; &quot;%AppData%\Emby-Server\programdata\plugins\&quot; /y" />
+  </Target>
+  
+</Project>

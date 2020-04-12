@@ -1,0 +1,28 @@
+﻿<div data-role="page" class="page type-interior pluginConfigurationPage withTabs"
+	 data-require="emby-button,emby-select,emby-checkbox,emby-linkbutton"
+	 data-controller="__plugin/ItemListPage.js">
+	<div data-role="content">
+		<div class="content-primary">
+			<h2>Item List</h2>
+
+			Sort By : 
+			<select id="sort_by_selection">
+				<option value="date_watched">Date Watched</option>
+				<option value="date_added">Date Added</option>
+				<option value="name">Name</option>
+			</select>
+
+			<table cellpadding="6" id="item_list_table" style="width:95%; padding-bottom: 250px;">
+				<thead>
+					<tr style="text-align: left;">
+						<th class="detailTableHeaderCell" data-priority="1">Name</th>
+						<th class="detailTableHeaderCell" data-priority="2">Watched</th>
+						<th class="detailTableHeaderCell" data-priority="3">Action</th>
+					</tr>
+				</thead>
+				<tbody class="resultBody" id="item_list_rows"></tbody>
+			</table>
+
+		</div>
+	</div>
+</div>
