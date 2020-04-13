@@ -225,9 +225,10 @@
                 item_name = item_details.name + " (" + item_details.production_year + ")";
             }
 
-            // item_name += " (" + item_details.played_date + ")";
+            //item_name += " (" + item_details.parent_id + ")";
 
             span.innerHTML = item_name;
+            span.setAttribute("title", item_details.path);
             td.appendChild(span);
             tr.appendChild(td);
 

@@ -202,6 +202,8 @@ namespace SafeDelete
             long item_id = long.Parse(request.item_id);
             BaseItem item = _lm.GetItemById(item_id);
 
+            string containing_folder = item.ContainingFolderPath;
+
             List<FileSystemMetadata> del_paths = item.GetDeletePaths(false);
             foreach (var del_item in del_paths)
             {
@@ -273,6 +275,9 @@ namespace SafeDelete
             query.Recursive = false;
             query.User = user.User;
             query.IsVirtualItem = false;
+            query.GroupByPresentationUniqueKey = false;
+            query.GroupBySeriesPresentationUniqueKey = false;
+            query.GroupItemsIntoCollections = false;
 
             if (!string.IsNullOrEmpty(parent_id))
             {
@@ -298,6 +303,7 @@ namespace SafeDelete
 
             List<Dictionary<string, object>> item_list = new List<Dictionary<string, object>>();
             var results = _lm.GetItemList(query);
+
             foreach (var item in results)
             {
                 //Movie movie_item  = item as Movie;
@@ -309,6 +315,8 @@ namespace SafeDelete
                 item_info["played"] = item.IsPlayed(user.User);
                 item_info["played_date"] = item.LastPlayedDate;
                 item_info["created_date"] = item.DateCreated;
+                item_info["parent_id"] = item.ParentId;
+                item_info["path"] = item.Path;
 
                 if (typeof(Episode).Equals(item.GetType()))
                 {
@@ -323,6 +331,14 @@ namespace SafeDelete
                     Season season = item as Season;
                     item_info["series_name"] = season.SeriesName;
                     item_info["season_number"] = season.IndexNumber;
+                }
+                else if (typeof(Series).Equals(item.GetType()))
+                {
+                    Series series = item as Series;
+                    //foreach (var ids in series.GetItemIdList(new InternalItemsQuery()))
+                    //{
+                    //    _logger.Info(item.InternalId + " : GetItemIdList Id: " + ids);
+                    //}
                 }
                 else if (typeof(Movie).Equals(item.GetType()))
                 {
