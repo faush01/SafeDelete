@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Security.Cryptography;
 using MediaBrowser.Model.Entities;
+using MediaBrowser.Controller.Providers;
+using System.Threading;
 
 namespace SafeDelete
 {
@@ -55,18 +57,21 @@ namespace SafeDelete
         private readonly IAuthorizationContext _ac;
         private readonly ILibraryManager _lm;
         private readonly IFileSystem _fs;
+        private readonly IProviderManager _pm;
 
         public RestApi(ILogManager logger, 
                        IUserManager userManager, 
                        IAuthorizationContext authContext,
                        ILibraryManager libraryManager,
-                       IFileSystem fs)
+                       IFileSystem fs,
+                       IProviderManager pm)
         {
             _logger = logger.GetLogger("SafeDelete");
             _userManager = userManager;
             _ac = authContext;
             _lm = libraryManager;
             _fs = fs;
+            _pm = pm;
         }
 
         public IRequest Request { get; set; }
@@ -191,6 +196,19 @@ namespace SafeDelete
 
             result.Add("result", action_result);
             result.Add("message", action_message);
+
+            //MetadataRefreshOptions opt = new MetadataRefreshOptions(_fs);
+            //opt.ImageRefreshMode = MetadataRefreshMode.ValidationOnly;
+            //_pm.QueueRefresh(item.InternalId, opt, RefreshPriority.High);
+
+            _lm.QueueLibraryScan();
+            /*
+            Thread.Sleep(1000);
+            while (_lm.IsScanRunning)
+            {
+                Thread.Sleep(1000);
+            }
+            */
 
             return result;
         }
