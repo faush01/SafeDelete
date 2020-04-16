@@ -1,6 +1,7 @@
 ﻿define(['mainTabsManager'], function (mainTabsManager) {
     'use strict';
 
+    var navigation_links_list = [];
     var current_parent_id = "";
     var current_type = "";
 
@@ -8,7 +9,7 @@
         var tabs = [
             {
                 href: Dashboard.getConfigurationPageUrl('ItemListPage'),
-                name: 'Item List'
+                name: 'Safe Delete'
             },
             {
                 href: Dashboard.getConfigurationPageUrl('SettingsPage'),
@@ -130,8 +131,28 @@
             });
             */
 
+            var confirm_text = "You are about to delete the following item.\r\n\r\n";
 
-            var confirm_text = "You are about to delete the following files:\r\n\r\n";
+            confirm_text += "Item Details\r\n\r\n";
+            confirm_text += "Type: " + delete_result.item_info["Item_type"] + "\r\n";
+
+            if (delete_result.item_info["Item_type"] === "Series") {
+                confirm_text += "Series: " + delete_result.item_info["item_name"] + "\r\n";
+            }
+            else if (delete_result.item_info["Item_type"] === "Season") {
+                confirm_text += "Series: " + delete_result.item_info["series_name"] + "\r\n";
+                confirm_text += "Season: " + delete_result.item_info["season_number"] + "\r\n";
+            }
+            else if (delete_result.item_info["Item_type"] === "Episode") {
+                confirm_text += "Series: " + delete_result.item_info["series_name"] + "\r\n";
+                confirm_text += "Season: " + delete_result.item_info["season_number"] + "\r\n";
+                confirm_text += "Episode: " + delete_result.item_info["episode_number"] + "\r\n";
+            }
+            else {
+                confirm_text += "Name: " + delete_result.item_info["item_name"] + "\r\n";
+            }
+
+            confirm_text += "\r\nItem Files\r\n\r\n";
             for (var index = 0; index < delete_result.file_list.length; index++) {
                 confirm_text += " - " + delete_result.file_list[index].Key + " (" + to_size_text(delete_result.file_list[index].Value) + ")\r\n";
             }
@@ -151,7 +172,7 @@
 
                 ApiClient.sendDeleteActionPost(delete_url_post, query_data).then(function (result) {
                     if (result.result) {
-                        alert("Item files processed");
+                        alert("Files deleted");
                     }
                     else {
                         alert("Error processing files!\r\n\r\n" + result.message);
@@ -162,10 +183,10 @@
         });
     }
 
-    function show_items(view, type, parent) {
+    function show_items(view, type, parent_id, parent_name) {
 
-        if (parent !== null) {
-            current_parent_id = parent;
+        if (parent_id !== null) {
+            current_parent_id = parent_id;
         }
         if (type !== null) {
             current_type = type;
@@ -185,6 +206,18 @@
             //alert("Loaded Data: " + JSON.stringify(usage_data));
             populate_items_listreport(view, items_list_data);
         });
+
+        var last_link = navigation_links_list[navigation_links_list.length - 1];
+
+        console.log("last_link name:" + last_link.name + " type:" + last_link.type + " parent_id:" + last_link.parent);
+        console.log("parent:" + parent_id + " type:" + type + " parent_name:" + parent_name);
+
+        if (last_link.parent !== parent_id || last_link.type !== type) {
+            var link_item = { name: parent_name, parent: parent_id, type: type };
+            navigation_links_list.push(link_item);
+            update_navigation_links(view);
+        }
+
     }
 
     function populate_items_listreport(view, item_list_data) {
@@ -205,18 +238,18 @@
             var td = document.createElement("td");
             td.style = "white-space: nowrap;width: 100%";
             var span = document.createElement("span");
-            span.style = "font-size: large; font-weight: bold;";
+            //span.style = "font-weight: bold;";//"font-size: large; font-weight: bold;";
             var item_name = "NONE";
 
             if (item_details.type === "Series") {
                 item_name = item_details.name;
                 span.style.cursor = "pointer";
-                span.addEventListener("click", function () { show_items(view, "Season", item_details.id); });
+                span.addEventListener("click", function () { show_items(view, "Season", item_details.id, item_details.name); });
             }
             else if (item_details.type === "Season") {
                 item_name = item_details.series_name + " - " + item_details.name;
                 span.style.cursor = "pointer";
-                span.addEventListener("click", function () { show_items(view, "Episode", item_details.id); });
+                span.addEventListener("click", function () { show_items(view, "Episode", item_details.id, item_details.name); });
             }
             else if (item_details.type === "Episode") {
                 item_name = item_details.series_name + " - " + item_details.season_name + " - " + item_details.episode_number + " : " + item_details.name;
@@ -237,7 +270,7 @@
             if (item_details.played) {
                 span = document.createElement("span");
                 var i_played = document.createElement("i");
-                i_played.style = "font-size: x-large;";
+                i_played.style = "font-size: large;";
                 i_played.className = "md-icon";
                 var t_played = document.createTextNode("check_circle");
                 i_played.appendChild(t_played);
@@ -251,7 +284,7 @@
             span = document.createElement("span");
             var i = document.createElement("i");
             i.className = "md-icon";
-            i.style = "font-size: x-large;cursor: pointer;";
+            i.style = "font-size: large;cursor: pointer;";
             var t = document.createTextNode("delete");
             i.appendChild(t);
             span.appendChild(i);
@@ -279,10 +312,10 @@
 
         var td = document.createElement("td");
         var span = document.createElement("span");
-        span.style = "font-size: large; font-weight: bold;";
+        //span.style = "font-size: large; font-weight: bold;";
         span.innerHTML = "Movies";
         span.style.cursor = "pointer";
-        span.addEventListener("click", function () { show_items(view, "Movie", ""); });
+        span.addEventListener("click", function () { show_items(view, "Movie", "", "Movies"); });
         td.appendChild(span);
         tr.appendChild(td);
 
@@ -302,10 +335,10 @@
 
         td = document.createElement("td");
         span = document.createElement("span");
-        span.style = "font-size: large; font-weight: bold;";
+        //span.style = "font-size: large; font-weight: bold;";
         span.innerHTML = "TV Shows";
         span.style.cursor = "pointer";
-        span.addEventListener("click", function () { show_items(view, "Series", ""); });
+        span.addEventListener("click", function () { show_items(view, "Series", "", "TV Shows"); });
         td.appendChild(span);
         tr.appendChild(td);
 
@@ -318,6 +351,44 @@
         tr.appendChild(td);
 
         table_body.appendChild(tr);
+
+    }
+
+    function navigation_action(view, link_details, index) {
+
+        console.log("link_details name:" + link_details.name + " type:" + link_details.type + " parent_id:" + link_details.parent);
+        console.log("index: " + index);
+
+        if (link_details.type === "root") {
+            add_starting_rows(view);
+        }
+        else {
+            show_items(view, link_details.type, link_details.parent, link_details.name);
+        }
+
+        navigation_links_list.splice(index + 1, navigation_links_list.length);
+
+        update_navigation_links(view);
+    }
+
+    function update_navigation_links(view) {
+
+        var navigation_links = view.querySelector('#navivation_links');
+
+        while (navigation_links.firstChild) {
+            navigation_links.removeChild(navigation_links.firstChild);
+        }
+
+        navigation_links_list.forEach(function (link_details, index) {
+
+            var span = document.createElement("span");
+            span.innerHTML = " > " + link_details.name;
+            span.style = "font-size: large; cursor: pointer;";
+
+            span.addEventListener("click", function () { navigation_action(view, link_details, index); });
+
+            navigation_links.appendChild(span);
+        });
 
     }
 
@@ -335,8 +406,13 @@
             sort_by_selection.addEventListener("change", sort_changed);
             
             function sort_changed() {
-                show_items(view, null, null);
+                show_items(view, null, null, "");
             }
+
+            var root = { name: "Root", parent: "", type: "root" };
+            navigation_links_list = [];
+            navigation_links_list.push(root);
+            update_navigation_links(view);
 
             add_starting_rows(view);
         });

@@ -3,21 +3,25 @@
 	 data-controller="__plugin/ItemListPage.js">
 	<div data-role="content">
 		<div class="content-primary">
-			<h2>Item List</h2>
+			<h2>Safe Delete</h2>
 
-			Sort By : 
+			Sort By :
 			<select id="sort_by_selection">
 				<option value="date_watched">Date Watched</option>
 				<option value="date_added">Date Added</option>
 				<option value="name">Name</option>
 			</select>
 
+			<br /><br />
+			<div id="navivation_links"></div>
+			
+
 			<table cellpadding="6" id="item_list_table" style="width:95%; padding-bottom: 250px;">
 				<thead>
 					<tr style="text-align: left;">
-						<th class="detailTableHeaderCell" data-priority="1">Name</th>
-						<th class="detailTableHeaderCell" data-priority="2">Watched</th>
-						<th class="detailTableHeaderCell" data-priority="3">Action</th>
+						<th class="detailTableHeaderCell" style="font-size: large; font-weight: bold;" data-priority="1">Name</th>
+						<th class="detailTableHeaderCell" style="font-size: large; font-weight: bold;" data-priority="2">Watched</th>
+						<th class="detailTableHeaderCell" style="font-size: large; font-weight: bold;" data-priority="3">Action</th>
 					</tr>
 				</thead>
 				<tbody class="resultBody" id="item_list_rows"></tbody>

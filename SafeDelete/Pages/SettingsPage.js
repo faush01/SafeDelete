@@ -7,7 +7,7 @@
         var tabs = [
             {
                 href: Dashboard.getConfigurationPageUrl('ItemListPage'),
-                name: 'Item List'
+                name: 'Safe Delete'
             },
             {
                 href: Dashboard.getConfigurationPageUrl('SettingsPage'),

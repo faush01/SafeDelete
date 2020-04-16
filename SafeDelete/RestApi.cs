@@ -257,6 +257,27 @@ namespace SafeDelete
             }
 
             Dictionary<string, object> results = new Dictionary<string, object>();
+
+            Dictionary<string, object> item_info = new Dictionary<string, object>();
+            item_info.Add("item_name", item.Name);
+            item_info.Add("Item_type", item.GetType().Name);
+            if (typeof(Episode).Equals(item.GetType()))
+            {
+                Episode epp = item as Episode;
+                item_info["series_name"] = epp.SeriesName;
+                item_info["season_name"] = epp.Season.Name;
+                item_info["season_number"] = epp.Season.IndexNumber;
+                item_info["episode_number"] = epp.IndexNumber;
+            }
+            else if (typeof(Season).Equals(item.GetType()))
+            {
+                Season season = item as Season;
+                item_info["series_name"] = season.SeriesName;
+                item_info["season_name"] = season.Name;
+                item_info["season_number"] = season.IndexNumber;
+            }
+            results.Add("item_info", item_info);
+
             results.Add("file_list", file_list);
             results.Add("ext_counts", ext_counts);
             results.Add("action_token", file_list_hash);
