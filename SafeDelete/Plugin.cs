@@ -34,7 +34,7 @@ namespace SafeDelete
         public Stream GetThumbImage()
         {
             var type = GetType();
-            return type.Assembly.GetManifestResourceStream(type.Namespace + ".Images.plugin.png");
+            return type.Assembly.GetManifestResourceStream(type.Namespace + ".Media.recycling-symbol.png");
         }
 
         public ImageFormat ThumbImageFormat
