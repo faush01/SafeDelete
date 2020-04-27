@@ -235,9 +235,44 @@
             var tr = document.createElement("tr");
             tr.className = "detailTableBodyRow detailTableBodyRow-shaded";
 
-            var td = document.createElement("td");
+            var td = null;
+            var i = null;
+            var t = null;
+            var span = null;
+
+            // action button
+            td = document.createElement("td");
+            td.style = "text-align: center;";
+            span = document.createElement("span");
+            i = document.createElement("i");
+            i.className = "md-icon";
+            i.style = "font-size: large;cursor: pointer;";
+            t = document.createTextNode("delete");
+            i.appendChild(t);
+            span.appendChild(i);
+            span.setAttribute("title", "Delete");
+            span.addEventListener("click", function () { delete_item(view, item_details.id); });
+            td.appendChild(span);
+            tr.appendChild(td);
+
+            // watched icon
+            td = document.createElement("td");
+            td.style = "text-align: center;";
+            if (item_details.played) {
+                span = document.createElement("span");
+                i = document.createElement("i");
+                i.style = "font-size: large;";
+                i.className = "md-icon";
+                i.appendChild(document.createTextNode("check_circle"));
+                span.appendChild(i);
+                td.appendChild(span);
+            }
+            tr.appendChild(td);
+
+            // name of item
+            td = document.createElement("td");
             td.style = "white-space: nowrap;width: 100%";
-            var span = document.createElement("span");
+            span = document.createElement("span");
             //span.style = "font-weight: bold;";//"font-size: large; font-weight: bold;";
             var item_name = "NONE";
 
@@ -265,34 +300,6 @@
             td.appendChild(span);
             tr.appendChild(td);
 
-            td = document.createElement("td");
-            td.style = "text-align: center;";
-            if (item_details.played) {
-                span = document.createElement("span");
-                var i_played = document.createElement("i");
-                i_played.style = "font-size: large;";
-                i_played.className = "md-icon";
-                var t_played = document.createTextNode("check_circle");
-                i_played.appendChild(t_played);
-                span.appendChild(i_played);
-                td.appendChild(span);
-            }
-            tr.appendChild(td);
-
-            td = document.createElement("td");
-            td.style = "text-align: center;";
-            span = document.createElement("span");
-            var i = document.createElement("i");
-            i.className = "md-icon";
-            i.style = "font-size: large;cursor: pointer;";
-            var t = document.createTextNode("delete");
-            i.appendChild(t);
-            span.appendChild(i);
-            span.setAttribute("title", "Delete");
-            span.addEventListener("click", function () { delete_item(view, item_details.id); });
-            td.appendChild(span);
-            tr.appendChild(td);
-
             table_body.appendChild(tr);
 
         });
@@ -311,20 +318,20 @@
         tr.className = "detailTableBodyRow detailTableBodyRow-shaded";
 
         var td = document.createElement("td");
+        td.appendChild(document.createTextNode(""));
+        tr.appendChild(td);
+
+        td = document.createElement("td");
+        td.appendChild(document.createTextNode(""));
+        tr.appendChild(td);
+
+        td = document.createElement("td");
         var span = document.createElement("span");
         //span.style = "font-size: large; font-weight: bold;";
         span.innerHTML = "Movies";
         span.style.cursor = "pointer";
         span.addEventListener("click", function () { show_items(view, "Movie", "", "Movies"); });
         td.appendChild(span);
-        tr.appendChild(td);
-
-        td = document.createElement("td");
-        td.appendChild(document.createTextNode(""));
-        tr.appendChild(td);
-
-        td = document.createElement("td");
-        td.appendChild(document.createTextNode(""));
         tr.appendChild(td);
 
         table_body.appendChild(tr);
@@ -334,20 +341,20 @@
         tr.className = "detailTableBodyRow detailTableBodyRow-shaded";
 
         td = document.createElement("td");
+        td.appendChild(document.createTextNode(""));
+        tr.appendChild(td);
+
+        td = document.createElement("td");
+        td.appendChild(document.createTextNode(""));
+        tr.appendChild(td);
+
+        td = document.createElement("td");
         span = document.createElement("span");
         //span.style = "font-size: large; font-weight: bold;";
         span.innerHTML = "TV Shows";
         span.style.cursor = "pointer";
         span.addEventListener("click", function () { show_items(view, "Series", "", "TV Shows"); });
         td.appendChild(span);
-        tr.appendChild(td);
-
-        td = document.createElement("td");
-        td.appendChild(document.createTextNode(""));
-        tr.appendChild(td);
-
-        td = document.createElement("td");
-        td.appendChild(document.createTextNode(""));
         tr.appendChild(td);
 
         table_body.appendChild(tr);
