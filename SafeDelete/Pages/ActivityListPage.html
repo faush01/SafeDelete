@@ -1,0 +1,21 @@
+﻿<div data-role="page" class="page type-interior pluginConfigurationPage withTabs"
+	 data-require="emby-button,emby-select,emby-checkbox,emby-linkbutton"
+	 data-controller="__plugin/ActivityListPage.js">
+	<div data-role="content">
+		<div class="content-primary">
+			<h2>Safe Delete Activity</h2>
+
+			<table cellpadding="6" id="activity_list_table" style="width:95%; padding-bottom: 250px;">
+				<thead>
+					<tr style="text-align: left;">
+						<th class="detailTableHeaderCell" style="border: 1px solid;" data-priority="3">Status</th>
+						<th class="detailTableHeaderCell" style="border: 1px solid;" data-priority="2">Result</th>
+						<th class="detailTableHeaderCell" style="width: 100%; border: 1px solid;" data-priority="1">Messages</th>
+					</tr>
+				</thead>
+				<tbody class="resultBody" id="activity_list_rows"></tbody>
+			</table>
+
+		</div>
+	</div>
+</div>

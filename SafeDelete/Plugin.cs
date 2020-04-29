@@ -72,6 +72,16 @@ namespace SafeDelete
                 },
                 new PluginPageInfo
                 {
+                    Name = "ActivityListPage",
+                    EmbeddedResourcePath = GetType().Namespace + ".Pages.ActivityListPage.html",
+                },
+                new PluginPageInfo
+                {
+                    Name = "ActivityListPage.js",
+                    EmbeddedResourcePath = GetType().Namespace + ".Pages.ActivityListPage.js"
+                },
+                new PluginPageInfo
+                {
                     Name = "SettingsPage",
                     EmbeddedResourcePath = GetType().Namespace + ".Pages.SettingsPage.html",
                 },

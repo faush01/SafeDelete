@@ -2,13 +2,15 @@
 
   <PropertyGroup>
 	<TargetFrameworks>netstandard2.0;</TargetFrameworks>
-    <AssemblyVersion>1.0.0.7</AssemblyVersion>
-    <FileVersion>1.0.0.7</FileVersion>
-    <Version>1.0.0.7</Version>
+    <AssemblyVersion>1.1.0.1</AssemblyVersion>
+    <FileVersion>1.1.0.1</FileVersion>
+    <Version>1.1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Media\recycling-symbol.png" />
+    <None Remove="Pages\ActivityListPage.html" />
+    <None Remove="Pages\ActivityListPage.js" />
     <None Remove="Pages\ItemListPage.html" />
     <None Remove="Pages\ItemListPage.js" />
     <None Remove="Pages\SettingsPage.html" />
@@ -17,6 +19,8 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Media\recycling-symbol.png" />
+    <EmbeddedResource Include="Pages\ActivityListPage.html" />
+    <EmbeddedResource Include="Pages\ActivityListPage.js" />
     <EmbeddedResource Include="Pages\ItemListPage.html" />
     <EmbeddedResource Include="Pages\ItemListPage.js" />
     <EmbeddedResource Include="Pages\SettingsPage.html" />

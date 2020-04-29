@@ -18,6 +18,13 @@ using System.Threading;
 
 namespace SafeDelete
 {
+    [Route("/emby_safe_delete/delete_activity", "GET", Summary = "Shows safe delete actions")]
+    [Authenticated]
+    public class SafeDeleteActivity : IReturn<Object>
+    {
+
+    }
+
     [Route("/emby_safe_delete/delete_item_action", "POST", Summary = "Safe delete an item action")]
     [Authenticated]
     public class SafeDeleteAction : IReturn<Object>
@@ -82,6 +89,25 @@ namespace SafeDelete
             return "";
         }
 
+        public object Get(SafeDeleteActivity request)
+        {
+            List<Dictionary<string, object>> results = new List<Dictionary<string, object>>();
+
+            DeleteActivity del_activity = DeleteActivity.Instance;
+
+            foreach(var activity in del_activity.GetActions())
+            {
+                Dictionary<string, object> details = new Dictionary<string, object>();
+                details.Add("status", activity.GetStatus());
+                details.Add("result", activity.GetActionResult());
+                details.Add("messages", activity.GetActionMessages());
+
+                results.Add(details);
+            }
+
+            return results;
+        }
+
         public object Post(SafeDeleteAction request)
         {
             _logger.Info("POST SafeDeleteAction: {0}", request);
@@ -138,77 +164,13 @@ namespace SafeDelete
                 return result;
             }
 
-            // do file moves
-            string time_stamp = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-fff");
-            int item_number = 0;
+            DeleteActivity del_activity = DeleteActivity.Instance;
+            DeleteAction del_action = new DeleteAction(_fs, _lm, _logger, del_paths, recycle_path);
+            del_activity.GetActions().Add(del_action);
+            del_action.RunBackgroundAction();
 
-            bool action_result = true;
-            string action_message = "Files moved.";
-
-            foreach (var del_item in del_paths)
-            {
-                _logger.Info("Item Delete Path: " + del_item.FullName);
-
-                if (del_item.IsDirectory)
-                {
-                    FileSystemMetadata fsm = _fs.GetDirectoryInfo(del_item.FullName);
-                    string destination = System.IO.Path.Combine(recycle_path, time_stamp, item_number.ToString());
-                    _logger.Info("Item Delete Destination Path: " + destination);
-
-                    try
-                    {
-                        _fs.CreateDirectory(destination);
-                        destination = System.IO.Path.Combine(destination, fsm.Name);
-                        _fs.MoveDirectory(del_item.FullName, destination);
-                    }
-                    catch(Exception e)
-                    {
-                        action_result = false;
-                        action_message = e.Message;
-                    }
-                }
-                else
-                {
-                    FileSystemMetadata fsm = _fs.GetDirectoryInfo(del_item.FullName);
-                    string destination = System.IO.Path.Combine(recycle_path, time_stamp, item_number.ToString());
-                    _logger.Info("Item Delete Destination Path: " + destination);
-
-                    try
-                    {
-                        _fs.CreateDirectory(destination);
-                        destination = System.IO.Path.Combine(destination, fsm.Name);
-                        _fs.MoveFile(del_item.FullName, destination);
-                    }
-                    catch(Exception e)
-                    {
-                        action_result = false;
-                        action_message = e.Message;
-                    }
-                }
-
-                if (!action_result)
-                {
-                    break;
-                }
-
-                item_number++;
-            }
-
-            result.Add("result", action_result);
-            result.Add("message", action_message);
-
-            //MetadataRefreshOptions opt = new MetadataRefreshOptions(_fs);
-            //opt.ImageRefreshMode = MetadataRefreshMode.ValidationOnly;
-            //_pm.QueueRefresh(item.InternalId, opt, RefreshPriority.High);
-
-            _lm.QueueLibraryScan();
-            /*
-            Thread.Sleep(1000);
-            while (_lm.IsScanRunning)
-            {
-                Thread.Sleep(1000);
-            }
-            */
+            result.Add("result", true);
+            result.Add("message", "Action Queued");
 
             return result;
         }

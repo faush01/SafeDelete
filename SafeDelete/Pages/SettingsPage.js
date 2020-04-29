@@ -10,6 +10,10 @@
                 name: 'Safe Delete'
             },
             {
+                href: Dashboard.getConfigurationPageUrl('ActivityListPage'),
+                name: 'Activity'
+            },
+            {
                 href: Dashboard.getConfigurationPageUrl('SettingsPage'),
                 name: 'Settings'
             }
@@ -49,7 +53,7 @@
 
         // init code here
         view.addEventListener('viewshow', function (e) {
-            mainTabsManager.setTabs(this, 1, getTabs);
+            mainTabsManager.setTabs(this, 2, getTabs);
 
             loadPageSettings(view);
 

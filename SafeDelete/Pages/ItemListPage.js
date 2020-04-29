@@ -12,6 +12,10 @@
                 name: 'Safe Delete'
             },
             {
+                href: Dashboard.getConfigurationPageUrl('ActivityListPage'),
+                name: 'Activity'
+            },
+            {
                 href: Dashboard.getConfigurationPageUrl('SettingsPage'),
                 name: 'Settings'
             }
@@ -172,7 +176,7 @@
 
                 ApiClient.sendDeleteActionPost(delete_url_post, query_data).then(function (result) {
                     if (result.result) {
-                        alert("Files deleted");
+                        alert(result.message);
                     }
                     else {
                         alert("Error processing files!\r\n\r\n" + result.message);
