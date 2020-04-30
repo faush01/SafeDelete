@@ -83,6 +83,83 @@
         ApiClient.deleteItemConfirmation(delete_url).then(function (delete_result) {
             console.log("Delete Result: " + JSON.stringify(delete_result));
 
+            // delete confirmation message
+            var confirm_text = "You are about to delete the following files:<br/><br/>";
+            confirm_text += "<div style='width:100%;'><table style='margin-left:auto; margin-right:auto;'>";
+            for (var index = 0; index < delete_result.file_list.length; index++) {
+                confirm_text += "<tr><td style='text-align: left; white-space: nowrap;'>" + delete_result.file_list[index].Key + " </td>";
+                confirm_text += "<td style='text-align: left; white-space: nowrap;'>(" + to_size_text(delete_result.file_list[index].Value) + ")</td></tr>";
+            }
+            confirm_text += "</table></div><br/>Are you sure?";
+
+            var confirmation_message_text = view.querySelector('#confirmation_message_text');
+            confirmation_message_text.innerHTML = confirm_text;
+
+            var button_class_high = "btnOption raised formDialogFooterItem formDialogFooterItem-autosize button-submit emby-button";
+            var button_class_low = "btnOption raised formDialogFooterItem formDialogFooterItem-autosize button-cancel emby-button";
+
+            var confirmatiom_dialog = view.querySelector('#confirmatiom_dialog');
+
+            // button container
+            var button_contrainer = view.querySelector('#button_contrainer');
+            // remove old buttons
+            while (button_contrainer.firstChild) {
+                button_contrainer.removeChild(button_contrainer.firstChild);
+            }
+
+            // add yes button
+            var yes_button = document.createElement("button");
+            yes_button.className = button_class_high;
+            yes_button.setAttribute("is", "emby-button");
+            yes_button.style.paddingLeft = "30px";
+            yes_button.style.paddingRight = "30px";
+            yes_button.style.marginLeft = "20px";
+            yes_button.style.marginRight = "20px";
+            var t = document.createTextNode("Yes");
+            yes_button.appendChild(t);
+
+            yes_button.addEventListener("click", function () {
+                confirmatiom_dialog.style.visibility = "hidden";
+                var delete_url_post = "/emby_safe_delete/delete_item_action?stamp=" + new Date().getTime();
+                delete_url_post = ApiClient.getUrl(delete_url_post);
+
+                var query_data = {
+                    action_token: delete_result.action_token,
+                    item_id: item_id
+                };
+
+                ApiClient.sendDeleteActionPost(delete_url_post, query_data).then(function (result) {
+
+                    alert("Delete action\r\nResult: " + result.result + "\r\n" + result.message);
+
+                });
+            });
+
+            button_contrainer.appendChild(yes_button);
+
+            // add no button
+            var no_button = document.createElement("button");
+            no_button.className = button_class_high;
+            no_button.setAttribute("is", "emby-button");
+            no_button.style.paddingLeft = "30px";
+            no_button.style.paddingRight = "30px";
+            no_button.style.marginLeft = "20px";
+            no_button.style.marginRight = "20px";
+            t = document.createTextNode("No");
+            no_button.appendChild(t);
+
+            no_button.addEventListener("click", function () {
+                confirmatiom_dialog.style.visibility = "hidden";
+            });
+
+            button_contrainer.appendChild(no_button);
+
+
+            // set dialog visible
+            confirmatiom_dialog.style.visibility = "visible";
+
+
+
             /*
             var confirm_text = "You are about to delete the following files:<br/><br/>";
             confirm_text += "<div style='width:100%;'><table style='margin-left:auto; margin-right:auto;'>";
@@ -135,6 +212,9 @@
             });
             */
 
+
+
+            /*
             var confirm_text = "You are about to delete the following item.\r\n\r\n";
 
             confirm_text += "Item Details\r\n\r\n";
@@ -183,6 +263,7 @@
                     }
                 });
             }
+            */
 
         });
     }
