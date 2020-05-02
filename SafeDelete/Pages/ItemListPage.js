@@ -156,8 +156,18 @@
 
 
             // set dialog visible
-            confirmatiom_dialog.style.visibility = "visible";
+            var item = confirmatiom_dialog;
+            var top_pos = 0;
+            while (item && top_pos === 0) {
+                //alert(item.scrollTop);
+                top_pos = item.scrollTop;
+                item = item.parentElement;
+            }
+            //alert(top_pos);
 
+            confirmatiom_dialog.style.top = top_pos + "px";
+            confirmatiom_dialog.style.visibility = "visible";
+            
 
 
             /*
