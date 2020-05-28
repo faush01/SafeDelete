@@ -337,11 +337,14 @@
 
             // action button
             td = document.createElement("td");
-            td.style = "text-align: center;";
+            //td.style = "text-align: center;";
+            td.style.textAlign = "center";
             span = document.createElement("span");
             i = document.createElement("i");
             i.className = "md-icon";
-            i.style = "font-size: large;cursor: pointer;";
+            //i.style = "font-size: large;cursor: pointer;";
+            i.style.cursor = "pointer";
+            i.style.fontSize = "large";
             t = document.createTextNode("delete");
             i.appendChild(t);
             span.appendChild(i);
@@ -352,11 +355,13 @@
 
             // watched icon
             td = document.createElement("td");
-            td.style = "text-align: center;";
+            //td.style = "text-align: center;";
+            td.style.textAlign = "center";
             if (item_details.played) {
                 span = document.createElement("span");
                 i = document.createElement("i");
-                i.style = "font-size: large;";
+                //i.style = "font-size: large;";
+                i.style.fontSize = "large";
                 i.className = "md-icon";
                 i.appendChild(document.createTextNode("check_circle"));
                 span.appendChild(i);
@@ -366,7 +371,9 @@
 
             // name of item
             td = document.createElement("td");
-            td.style = "white-space: nowrap;width: 100%";
+            //td.style = "white-space: nowrap;width: 100%";
+            td.style.whiteSpace = "nowrap";
+            td.style.width = "100%";
             span = document.createElement("span");
             //span.style = "font-weight: bold;";//"font-size: large; font-weight: bold;";
             var item_name = "NONE";
@@ -485,8 +492,9 @@
 
             var span = document.createElement("span");
             span.innerHTML = " > " + link_details.name;
-            span.style = "font-size: large; cursor: pointer;";
-
+            //span.style = "font-size: large; cursor: pointer;";
+            span.style.cursor = "pointer";
+            span.style.fontSize = "large";
             span.addEventListener("click", function () { navigation_action(view, link_details, index); });
 
             navigation_links.appendChild(span);
